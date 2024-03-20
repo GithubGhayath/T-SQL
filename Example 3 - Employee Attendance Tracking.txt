@@ -1,0 +1,65 @@
+
+use C21_DB1;
+
+
+-- Inserting sample data into EmployeeAttendance
+CREATE TABLE EmployeeAttendance (
+    RecordID INT PRIMARY KEY,
+    EmployeeID INT,
+    AttendanceDate DATE,
+    Status VARCHAR(10) -- Values could be 'Present', 'Absent', 'Leave'
+);
+
+-- Inserting sample data into EmployeeAttendance
+INSERT INTO EmployeeAttendance (RecordID, EmployeeID, AttendanceDate, Status) VALUES (1, 101, '2023-07-01', 'Present');
+INSERT INTO EmployeeAttendance (RecordID, EmployeeID, AttendanceDate, Status) VALUES (2, 102, '2023-07-01', 'Absent');
+INSERT INTO EmployeeAttendance (RecordID, EmployeeID, AttendanceDate, Status) VALUES (3, 103, '2023-07-01', 'Leave');
+INSERT INTO EmployeeAttendance (RecordID, EmployeeID, AttendanceDate, Status) VALUES (4, 101, '2023-07-02', 'Present');
+INSERT INTO EmployeeAttendance (RecordID, EmployeeID, AttendanceDate, Status) VALUES (5, 102, '2023-07-02', 'Present');
+
+
+
+
+
+
+
+-- This script generates an employee attendance report for a specified month and year.
+-- It tracks the number of days present, absent, and on leave for a particular employee.
+
+-- Declare variables
+DECLARE @ReportMonth INT;
+DECLARE @ReportYear INT;
+DECLARE @TotalDays INT;
+DECLARE @EmployeeID INT;
+DECLARE @PresentDays INT;
+DECLARE @AbsentDays INT;
+DECLARE @LeaveDays INT;
+
+-- Initialize variables
+SET @ReportMonth = 7; -- Set the month for the report
+SET @ReportYear = 2023; -- Set the year for the report
+SET @EmployeeID = 101; -- Set the Employee ID for the report
+
+-- Calculate total days in the month
+SET @TotalDays = DAY(EOMONTH(DATEFROMPARTS(@ReportYear, @ReportMonth, 1)));
+
+-- Calculate present, absent, and leave days
+SELECT @PresentDays = COUNT(*)
+FROM EmployeeAttendance
+WHERE EmployeeID = @EmployeeID AND MONTH(AttendanceDate) = @ReportMonth AND YEAR(AttendanceDate) = @ReportYear AND Status = 'Present';
+
+SELECT @AbsentDays = COUNT(*)
+FROM EmployeeAttendance
+WHERE EmployeeID = @EmployeeID AND MONTH(AttendanceDate) = @ReportMonth AND YEAR(AttendanceDate) = @ReportYear AND Status = 'Absent';
+
+SELECT @LeaveDays = COUNT(*)
+FROM EmployeeAttendance
+WHERE EmployeeID = @EmployeeID AND MONTH(AttendanceDate) = @ReportMonth AND YEAR(AttendanceDate) = @ReportYear AND Status = 'Leave';
+
+-- Print the report
+PRINT 'Employee Attendance Report for Employee ID: ' + CAST(@EmployeeID AS VARCHAR);
+PRINT 'Report Month: ' + CAST(@ReportMonth AS VARCHAR) + '/' + CAST(@ReportYear AS VARCHAR);
+PRINT 'Total Working Days: ' + CAST(@TotalDays AS VARCHAR);
+PRINT 'Days Present: ' + CAST(@PresentDays AS VARCHAR);
+PRINT 'Days Absent: ' + CAST(@AbsentDays AS VARCHAR);
+PRINT 'Days on Leave: ' + CAST(@LeaveDays AS VARCHAR);

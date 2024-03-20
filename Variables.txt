@@ -1,0 +1,21 @@
+--Variables in T-SQL are objexts that can hold single data value of a specific type.
+
+--   *Syntax : DECLARE @VariableName DataType
+
+--Assigning Values:
+--            ==>  SET @VariableName = Value
+--            ==>  SELECT @VariableName = Value
+
+--Variable Scope :
+      --local to the batch, stored procedure , trigger in which they are declared.
+
+--Special Variables @@:
+--   @@IDENTITY  : Contains the last-inserted identity value
+--   @@ROWCOUNT  : Contains the number of rows affected by the last statment
+
+--Best Practices:
+-- =>Always initialize variables.
+-- =>Choose appropriate data types.
+-- =>Usr Descriptive Names.
+
+
