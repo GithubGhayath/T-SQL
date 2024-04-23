@@ -1,0 +1,68 @@
+-- Create the @Departments table variable
+DECLARE @Departments TABLE
+(
+    DepartmentID INT PRIMARY KEY IDENTITY(1,1),
+    DepartmentName NVARCHAR(50) NOT NULL
+);
+
+-- Insert some sample data into @Departments
+INSERT INTO @Departments
+VALUES
+    ('HR'),
+    ('IT'),
+    ('Sailer'),
+    ('Eng'),
+    ('SoftwareEng'),
+    ('Markiting');
+-- Add more rows as needed
+
+-- Create the @Employees table variable
+DECLARE @Employees TABLE 
+(
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    EmployeeName NVARCHAR(50) NOT NULL,
+    DepartmentID INT NOT NULL
+    --CONSTRAINT FK_DepartmentID FOREIGN KEY(DepartmentID) REFERENCES @Departments(DepartmentID)
+);
+
+-- Insert some sample data into @Employees
+INSERT INTO @Employees
+VALUES
+    ('Ola', 1),
+    ('Maya', 2),
+    ('Sale', 5),
+    ('Yara', 5),
+    ('Rahaf', 5),
+    ('Majeda', 4),
+    ('Ali', 6),
+    ('Samer', 3),
+    ('Ghayath', 3),
+    ('Shihab', 2);
+-- Add more rows as needed
+
+
+
+--This query retrieves the EmployeeName from the @Employees table and the corresponding DepartmentName from the @Departments table based on the common DepartmentID.
+--The aliases e and d make the query more concise and readable. 
+SELECT e.EmployeeName, d.DepartmentName 
+FROM @Employees AS e
+JOIN @Departments AS d ON e.DepartmentID = d.DepartmentID;
+
+
+--This query counts the total number of employees whose department name is ‘SoftwareEng’ based on the data in the @Employees and @Departments table variables.
+SELECT COUNT(*) AS TotalEmployees
+FROM @Employees e
+WHERE e.DepartmentID IN (SELECT d.DepartmentID FROM @Departments d WHERE d.DepartmentName = 'SoftwareEng');
+
+
+--In this query:
+--We count the number of employees in each department.
+--The result includes the department name and the total count of employees.
+--The GROUP BY clause groups the results by department name.
+
+SELECT COUNT(*) AS 'NUMBER OF EMPLOYEES' ,d.DepartmentName
+FROM @Employees AS e  JOIN @Departments AS d
+ON  e.DepartmentID = d.DepartmentID
+GROUP BY d.DepartmentName;
+
+
