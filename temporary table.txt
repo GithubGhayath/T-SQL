@@ -1,0 +1,149 @@
+
+--the ##lettergrade table is designed to store information about letter grades and their corresponding numerical values.
+--Since it is a temporary table (prefixed with ##), it will exist within the Globle session and will be automatically dropped when the session ends.
+CREATE TABLE ##lettergrade
+(
+	GradeID INT PRIMARY KEY IDENTITY(1,1),
+	Letter CHAR(2) NOT NULL,
+	NumberGrade INT NOT NULL
+)
+
+
+--the #Students table is designed to hold information about students,
+--including their names, specializations, and evaluation codes. 
+--Since it is a temporary table (prefixed with #),
+--it will only exist within the current session and will be automatically dropped when the session ends.
+CREATE TABLE #Students
+(
+	StudentID INT PRIMARY KEY IDENTITY(1,1),
+	StudentName NVARCHAR(50) NOT NULL,
+	Specialization NVARCHAR(100) NOT NULL,
+	StudentEvaluation CHAR(2) NOT NULL
+)
+
+-- Inserting sample data
+INSERT INTO #Students
+VALUES
+('Alice', 'Computer Science', 'A'),
+('Bob', 'Electrical Engineering', 'B'),
+('Carol', 'Mathematics', 'C'),
+('David', 'Physics', 'B+'),
+('Eve', 'Chemistry', 'A-'),
+('Frank', 'Biology', 'B'),
+('Grace', 'History', 'B-'),
+('Henry', 'Geology', 'C+');
+
+
+-- Inserting letter grade
+INSERT INTO ##lettergrade (Letter, NumberGrade)
+VALUES
+    ('A+', 95),
+    ('A', 90),
+    ('A-', 85),
+    ('B+', 80),
+    ('B', 75),
+    ('B-', 70),
+    ('C+', 65),
+    ('C', 60),
+    ('C-', 55),
+    ('D+', 50),
+    ('D', 45),
+    ('F', 0);
+
+
+
+--This query will return a result set containing the student ID, student name, student evaluation (letter grade),and the corresponding numerical grade.
+--The JOIN operation ensures that we match the student evaluations with their respective numerical values from the ##lettergrade table.
+SELECT S.StudentID,S.StudentName,S.StudentEvaluation,L.NumberGrade
+FROM #Students AS S JOIN ##lettergrade AS L
+ON S.StudentEvaluation=L.Letter
+
+
+--This query will return a result set containing the student ID, student name, student evaluation (letter grade),
+--and the corresponding numerical grade for students who scored higher than 80.
+SELECT S.StudentID,S.StudentName,S.StudentEvaluation,L.NumberGrade
+FROM #Students AS S JOIN ##lettergrade AS L
+ON S.StudentEvaluation=L.Letter
+WHERE L.NumberGrade>80
+
+
+-- Inserting more sample data
+INSERT INTO #Students (StudentName, Specialization, StudentEvaluation)
+VALUES
+('Isaac', 'Computer Engineering', 'A'),
+('Jasmine', 'Environmental Science', 'B+'),
+('Kevin', 'Economics', 'C-'),
+('Lily', 'English Literature', 'A'),
+('Michael', 'Chemical Engineering', 'B'),
+('Nora', 'Psychology', 'B-'),
+('Olivia', 'Political Science', 'C+'),
+('Patrick', 'Geography', 'A-'),
+('Quincy', 'Physics', 'B+'),
+('Rachel', 'Computer Science', 'A-'),
+('Samuel', 'Mechanical Engineering', 'C'),
+('Tina', 'Chemistry', 'B'),
+('Ulysses', 'Mathematics', 'A'),
+('Victoria', 'Biology', 'B-'),
+('Walter', 'History', 'C+'),
+('Xena', 'Geology', 'A-'),
+('Yvonne', 'Computer Engineering', 'A-'),
+('Zachary', 'Environmental Science', 'B'),
+('Alice', 'Physics', 'B+'),
+('Bob', 'Mathematics', 'A'),
+('Catherine', 'Chemical Engineering', 'B-'),
+('Daniel', 'Psychology', 'C+'),
+('Ella', 'Political Science', 'A-'),
+('Felix', 'Geography', 'B'),
+('Gavin', 'Computer Science', 'A-'),
+('Hannah', 'Electrical Engineering', 'B'),
+('Ian', 'Mathematics', 'A'),
+('Julia', 'Physics', 'B+'),
+('Keith', 'Chemistry', 'A-'),
+('Lena', 'Biology', 'B'),
+('Megan', 'History', 'B-'),
+('Nathan', 'Geology', 'C+');
+
+
+--SELECT ALL Students
+SELECT *FROM #Students
+
+-- Inserting more sample data with updated names
+INSERT INTO #Students (StudentName, Specialization, StudentEvaluation)
+VALUES
+    ('Alex', 'Computer Engineering', 'A'),
+    ('Bella', 'Environmental Science', 'B+'),
+    ('Charlie', 'Economics', 'C-'),
+    ('Diana', 'English Literature', 'A'),
+    ('Ethan', 'Chemical Engineering', 'B'),
+    ('Fiona', 'Psychology', 'B-'),
+    ('George', 'Political Science', 'C+'),
+    ('Hazel', 'Geography', 'A-'),
+    ('Isaac', 'Physics', 'B+'),
+    ('Jasmine', 'Computer Science', 'A-'),
+    ('Kevin', 'Mechanical Engineering', 'C'),
+    ('Luna', 'Chemistry', 'B'),
+    ('Max', 'Mathematics', 'A'),
+    ('Nina', 'Biology', 'B-'),
+    ('Oscar', 'History', 'C+'),
+    ('Piper', 'Geology', 'A-'),
+    ('Quinn', 'Computer Engineering', 'A-'),
+    ('Riley', 'Environmental Science', 'B'),
+    ('Samantha', 'Physics', 'B+'),
+    ('Theo', 'Mathematics', 'A'),
+    ('Uma', 'Chemical Engineering', 'B-'),
+    ('Victor', 'Psychology', 'C+'),
+    ('Wendy', 'Political Science', 'A-'),
+    ('Xander', 'Geography', 'B'),
+    ('Yara', 'Computer Science', 'A-'),
+    ('Zane', 'Electrical Engineering', 'B'),
+    ('Anna', 'Mathematics', 'A'),
+    ('Benjamin', 'Physics', 'B+'),
+    ('Chloe', 'Chemistry', 'A-'),
+    ('David', 'Biology', 'B'),
+    ('Emma', 'History', 'B-'),
+    ('Finn', 'Geology', 'C+');
+
+
+--This query will return a result set showing the count of students for each evaluation category.
+SELECT #Students.StudentEvaluation, COUNT(*) AS 'Number Of Student' FROM #Students
+GROUP BY #Students.StudentEvaluation
