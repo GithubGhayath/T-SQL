@@ -1,0 +1,245 @@
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    EmployeeName VARCHAR(255),
+    Salary DECIMAL(10, 2),
+    Department VARCHAR(50)
+);
+
+-- Inserting sample data
+INSERT INTO Employees 
+VALUES
+    ('John Doe', 75000.00, 'Sales'),
+    ('Jane Smith', 80000.00, 'Marketing'),
+    ('Michael Johnson', 90000.00, 'Finance'),
+	('Robert Johnson', 85000.00, 'IT'),
+    ('Linda Adams', 72000.00, 'HR'),
+    ('William Lee', 95000.00, 'Finance'),
+    ('Karen White', 78000.00, 'Marketing'),
+    ('Daniel Brown', 70000.00, 'Sales'),
+	('Jennifer Adams', 76000.00, 'Marketing'),
+    ('Christopher Lee', 89000.00, 'IT'),
+    ('Elizabeth Brown', 71000.00, 'Sales'),
+    ('Matthew Johnson', 92000.00, 'Finance'),
+    ('Sarah White', 78000.00, 'HR'),
+	('David Lee', 83000.00, 'IT'),
+    ('Laura Adams', 71000.00, 'Sales'),
+    ('Kevin Johnson', 92000.00, 'Finance'),
+    ('Michelle White', 78000.00, 'HR'),
+    ('Brian Brown', 70000.00, 'Marketing'),
+	('Olivia Johnson', 85000.00, 'IT'),
+    ('William Adams', 72000.00, 'HR'),
+    ('Sophia Lee', 95000.00, 'Finance'),
+    ('James White', 78000.00, 'Marketing'),
+    ('Emma Brown', 70000.00, 'Sales'),
+    ('Alexander Johnson', 85000.00, 'IT'),
+    ('Abigail Adams', 72000.00, 'HR'),
+    ('Ethan Lee', 95000.00, 'Finance'),
+    ('Olivia White', 78000.00, 'Marketing'),
+    ('Noah Brown', 70000.00, 'Sales'),
+    ('Sophia Johnson', 83000.00, 'IT'),
+    ('Emily Brown', 70000.00, 'HR'),
+	('Alice Johnson', 75000.00, 'Sales'),
+    ('Bob Smith', 80000.00, 'Marketing'),
+    ('Caroline Adams', 90000.00, 'Finance'),
+    ('David Johnson', 85000.00, 'IT'),
+    ('Ella Adams', 72000.00, 'HR'),
+    ('Frank Lee', 95000.00, 'Finance'),
+    ('Grace White', 78000.00, 'Marketing'),
+    ('Henry Brown', 70000.00, 'Sales'),
+    ('Isabella Adams', 76000.00, 'Marketing'),
+    ('Jack Lee', 89000.00, 'IT'),
+    ('Kate Brown', 71000.00, 'Sales'),
+    ('Leo Johnson', 92000.00, 'Finance'),
+    ('Mia White', 78000.00, 'HR'),
+    ('Nathan Lee', 83000.00, 'IT'),
+    ('Olivia Adams', 71000.00, 'Sales'),
+    ('Patrick Johnson', 92000.00, 'Finance'),
+    ('Quinn White', 78000.00, 'HR'),
+    ('Ryan Brown', 70000.00, 'Marketing'),
+    ('Sophie Johnson', 85000.00, 'IT'),
+    ('Thomas Adams', 72000.00, 'HR'),
+    ('Ursula Lee', 95000.00, 'Finance'),
+    ('Victor White', 78000.00, 'Marketing'),
+    ('Wendy Brown', 70000.00, 'Sales'),
+    ('Xander Johnson', 85000.00, 'IT'),
+    ('Yara Adams', 72000.00, 'HR'),
+    ('Zane Lee', 95000.00, 'Finance'),
+    ('Zoe White', 78000.00, 'Marketing'),
+    ('Noah Brown', 70000.00, 'Sales'),
+    ('Sophia Johnson', 83000.00, 'IT'),
+    ('Emily Brown', 70000.00, 'HR');
+
+
+SELECT *FROM Employees
+
+
+--Below is the SQL script that creates a stored procedure named SP_SelectEmployees. This procedure retrieves all records from the Employees
+CREATE PROCEDURE SP_SelectEmployees
+AS
+	BEGIN
+		SELECT *FROM Employees
+	END
+
+--Here’s how you can execute the SP_SelectEmployees stored procedure
+EXEC SP_SelectEmployees
+
+
+
+--This procedure updates an employee’s information (name, salary, and department) based on the provided @ID. It also sets the @IsUpdated output parameter to 1 if the update is successful
+CREATE PROCEDURE SP_UpdateEmployee
+	@ID INT,
+    @NewName NVARCHAR(255),
+	@Salary DECIMAL,
+	@Department NVARCHAR(200),
+	@IsUpdated BIT OUTPUT
+AS
+	BEGIN 
+			UPDATE Employees SET EmployeeName = @NewName , Salary = @Salary , Department = @Department
+			WHERE EmployeeID = @ID
+
+			IF(@@ROWCOUNT > 0)
+				BEGIN
+					SET	@IsUpdated=1
+				END
+			ELSE
+				BEGIN
+					SET @IsUpdated=0;
+				END
+END
+
+
+--Drop procedure for update it's body
+DROP PROCEDURE SP_UpdateEmployee;
+
+
+--This script declares an @IsUpdate variable, executes the SP_UpdateEmployee stored procedure with specified parameters, and prints a message if the employee update is successful
+DECLARE @IsUpdate BIT;
+
+EXEC SP_UpdateEmployee
+	@ID=1,
+	@NewName='Ghayath Alali',
+	@Salary=8000.22,
+	@Department='ENG',
+	@IsUpdated=@IsUpdate OUTPUT;
+
+IF @IsUpdate=1
+	BEGIN
+		PRINT 'Employee Updated Successfully';
+	END
+
+
+--Below is the SQL script for creating the stored procedure SP_DeleteEmployee.
+--This procedure deletes an employee record based on the provided @EmployeeID.
+--It also sets the @IsDeleted output parameter to 1 if the deletion is successful, or 0 if no rows were affected:
+CREATE PROCEDURE SP_DeleteEmployee
+	@EmployeeID INT,
+	@IsDeleted BIT OUTPUT
+AS
+BEGIN
+	
+	DELETE FROM Employees
+	WHERE EmployeeID = @EmployeeID
+
+		IF @@ROWCOUNT > 0
+			BEGIN
+				SET @IsDeleted = 1;
+			END
+		ELSE
+			BEGIN
+				SET @IsDeleted = 0;
+			END
+END
+
+
+DECLARE @IsEmployeeDeleted BIT;
+
+
+--This script executes the SP_DeleteEmployee stored procedure with an @EmployeeID of 60. If the deletion is successful, it prints “EMPLOYEE DELETED SUCCESSFULLY”; otherwise, it prints “SOMETHING WENT WRONG!” 
+EXEC SP_DeleteEmployee
+	@EmployeeID = 60,
+	@IsDeleted = @IsEmployeeDeleted OUTPUT;
+
+IF @IsEmployeeDeleted = 1
+	BEGIN 
+		PRINT 'EMPLOYEE DELETED SUCCESSFULLY'
+	END
+ELSE
+	BEGIN 
+		PRINT 'SOMETHING WRONG!'
+	END
+ 
+
+
+ --This script creates a stored procedure named SP_PrintEmployeeTableUsingWhileLoop. The procedure retrieves employee information from the Employees table using a WHILE loop and prints each record. 
+CREATE PROCEDURE SP_PrintEmployeeTableUsingWhileLoop
+AS
+	BEGIN
+		DECLARE @MINEMPID INT;
+		DECLARE @MAXEMPID INT;
+		DECLARE @EMPNAME NVARCHAR(255);
+		DECLARE @EMPDEPARTMENT NVARCHAR(255);
+		DECLARE @EMPSALARY DECIMAL;
+
+		SELECT @MINEMPID = MIN(Employees.EmployeeID) FROM Employees
+		SELECT @MAXEMPID = MAX(Employees.EmployeeID) FROM Employees
+			
+			WHILE(@MINEMPID IS NOT NULL AND @MINEMPID < @MAXEMPID)
+				BEGIN 
+
+					SELECT @EMPNAME = Employees.EmployeeName , @EMPDEPARTMENT = Employees.Department , @EMPSALARY = Employees.Salary FROM Employees WHERE EmployeeID = @MINEMPID ;
+
+					PRINT 'THE '+CAST(@MINEMPID AS NVARCHAR) + ' REOCRD IS : '+CAST(@MINEMPID AS NVARCHAR)+ ' , '+ @EMPNAME+' , '+@EMPDEPARTMENT+' , '+CAST(@EMPSALARY AS NVARCHAR);
+
+					SELECT @MINEMPID = MIN(Employees.EmployeeID) FROM Employees WHERE   @MINEMPID < EmployeeID
+				END
+
+
+	END
+
+
+--Print The Result
+EXEC SP_PrintEmployeeTableUsingWhileLoop;
+
+
+
+--This stored procedure will return all columns from the Employees table where the EmployeeID matches the input parameter value.
+CREATE PROCEDURE SP_SelectEmployee
+	@EmployeeID INT
+AS
+BEGIN
+	SELECT *FROM Employees WHERE EmployeeID=@EmployeeID;
+END
+
+EXEC SP_SelectEmployee
+	@EmployeeID=1
+
+
+--This stored procedure will return 1 if an employee with the specified EmployeeID exists, and 0 otherwise.
+CREATE PROCEDURE SP_CheckEmployeeExists
+	@EmployeeID INT
+AS
+BEGIN
+	IF EXISTS(SELECT *FROM Employees WHERE EmployeeID = @EmployeeID)
+		BEGIN 
+			RETURN 1;
+		END
+	ELSE
+		BEGIN 
+			RETURN 0;
+		END
+END
+
+--checks whether an employee with EmployeeID = 1 exists in the Employees table.
+--If the employee exists, it prints “EMPLOYEE HERE”; otherwise, it prints “EMPLOYEE NOT HERE.”
+DECLARE @RESULT INT;
+
+EXEC @RESULT =  SP_CheckEmployeeExists @EmployeeID = 1;
+IF( @RESULT = 1)
+	BEGIN
+		PRINT 'EMPLOYEE HERE'
+	END
+ELSE
+	BEGIN
+		PRINT 'EMPLOYEE NOT HERE'
+	END
