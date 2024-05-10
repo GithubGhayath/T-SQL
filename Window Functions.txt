@@ -1,0 +1,298 @@
+
+/*
+			Window Function or Analytic Function:
+
+				Aggregate Function ----------------------------------> MIN() , MAX() , SUM() , AVG() , COUNT() , etc
+				Ranking Function   ----------------------------------> ROW_NUMBE() , RANK() , DENSE_RANK() , NTILE() , etc
+				Analytic Function  ----------------------------------> LAG() , LEAD() , FIRST_VALUE() , LAST_VALUE() , etc
+*/
+
+
+
+
+
+
+
+--The provided SQL code creates a table named Students
+CREATE TABLE Students
+(
+	StudentID INT PRIMARY KEY IDENTITY(1,1),
+	StudentName NVARCHAR(50) NOT NULL,
+	Subject NVARCHAR(50) NOT NULL,
+	Great INT NOT NULL
+);
+
+
+--The provided SQL INSERT INTO statement adds multiple records to the Students table. Each record represents a student with the following details:
+--StudentName: The name of the student.
+--Subject: The subject of study for the student.
+--Great: The student’s grade or performance level.
+
+INSERT INTO Students (StudentName, Subject, Great)
+VALUES
+    ('Olivia Green', 'Biology', 87),
+    ('Daniel Clark', 'Geography', 79),
+    ('Isabella Turner', 'Art History', 93),
+    ('Ethan Adams', 'Computer Science', 88),
+    ('Sophie Hall', 'Mathematics', 92),
+    ('Liam Parker', 'Physics', 85),
+    ('Ava Lewis', 'Chemistry', 78),
+    ('Noah Wright', 'Literature', 91),
+    ('Emma Scott', 'History', 86),
+    ('William King', 'Biology', 89),
+    ('Mia Martinez', 'Geography', 82),
+    ('James Lee', 'Art History', 94),
+    ('Charlotte Harris', 'Computer Science', 87),
+    ('Benjamin White', 'Mathematics', 90),
+    ('Amelia Turner', 'Physics', 84),
+    ('Alexander Brown', 'Chemistry', 77),
+    ('Ella Adams', 'Literature', 92),
+    ('Henry Hall', 'History', 85),
+    ('Grace Parker', 'Biology', 88),
+    ('Michael Clark', 'Geography', 81),
+    ('Oliver Lewis', 'Art History', 93),
+    ('Emily Wright', 'Computer Science', 86),
+    ('Scarlett Scott', 'Mathematics', 89),
+    ('Logan King', 'Physics', 83),
+    ('Chloe Martinez', 'Chemistry', 76),
+    ('Jackson Lee', 'Literature', 91),
+    ('Lily Harris', 'History', 84),
+    ('Samuel White', 'Biology', 87),
+    ('Abigail Turner', 'Geography', 80),
+    ('Lucas Adams', 'Art History', 92),
+	('Alice Smith', 'Physics', 85),
+    ('Bob Johnson', 'Chemistry', 78),
+    ('Eva Brown', 'Literature', 92),
+	('Emily White', 'History', 88),
+	('Sophia Turner', 'Computer Science', 93),
+    ('Elijah Adams', 'Mathematics', 88),
+    ('Avery Hall', 'Physics', 82),
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+    ('Scarlett Wright', 'History', 83),
+    ('Lucas Scott', 'Biology', 86),
+    ('Madison King', 'Geography', 79),
+    ('Jackson Martinez', 'Art History', 92),
+    ('Lily Clark', 'Computer Science', 87),
+    ('Aiden White', 'Mathematics', 91),
+    ('Abigail Turner', 'Physics', 84),
+    ('Ethan Harris', 'Chemistry', 77),
+    ('Olivia Green', 'Literature', 89),
+    ('Daniel Clark', 'History', 85),
+    ('Isabella Turner', 'Biology', 88),
+    ('Michael Adams', 'Geography', 81),
+    ('Emily Hall', 'Art History', 93),
+    ('Alexander Parker', 'Computer Science', 86),
+    ('Mia Lewis', 'Mathematics', 90),
+    ('James Wright', 'Physics', 83),
+    ('Charlotte Scott', 'Chemistry', 76),
+    ('Benjamin King', 'Literature', 91),
+    ('Amelia Martinez', 'History', 84),
+    ('Henry Clark', 'Biology', 87),
+    ('Grace Turner', 'Geography', 80),
+    ('Noah Harris', 'Art History', 92),
+    ('Emma Green', 'Computer Science', 85),
+    ('William Clark', 'Mathematics', 89),
+    ('Mia Turner', 'Physics', 82),
+    ('Liam Adams', 'Chemistry', 75),
+    ('Ava Hall', 'Literature', 88),
+    ('Ethan Parker', 'History', 83),
+    ('Sophie Lewis', 'Biology', 86),
+    ('Liam Wright', 'Geography', 79),
+    ('Ella Martinez', 'Art History', 94),
+    ('Henry Clark', 'Computer Science', 87),
+    ('Chloe White', 'Mathematics', 91),
+    ('Logan Turner', 'Physics', 84),
+    ('Evelyn Harris', 'Chemistry', 77),
+    ('Jackson King', 'Literature', 90),
+    ('Oliver Martinez', 'History', 85),
+    ('Emily Clark', 'Biology', 88),
+    ('Samuel Turner', 'Geography', 81),
+    ('Abigail Adams', 'Art History', 93),
+    ('Lucas Hall', 'Computer Science', 86),
+    ('Lily Lewis', 'Mathematics', 90),
+    ('Michael Wright', 'Physics', 83),
+    ('Ella Scott', 'Chemistry', 76),
+    ('Daniel King', 'Literature', 91),
+    ('Isabella Martinez', 'History', 84),
+    ('Sophia Clark', 'Biology', 87),
+    ('Ethan Turner', 'Geography', 80),
+    ('Avery Harris', 'Art History', 92),
+    ('Evelyn Adams', 'Computer Science', 85),
+    ('Carter Hall', 'Mathematics', 89),
+    ('Scarlett Parker', 'Physics', 82),
+    ('Lucas Lewis', 'Chemistry', 75),
+    ('Madison Turner', 'Literature', 88),
+    ('Jackson Martinez', 'History', 83),
+    ('Lily Green', 'Biology', 86),
+    ('Aiden Turner', 'Geography', 79),
+    ('Abigail Harris', 'Art History', 94),
+    ('Ethan Clark', 'Computer Science', 87),
+    ('Olivia Lewis', 'Mathematics', 91),
+    ('Daniel Wright', 'Physics', 84),
+    ('Isabella Scott', 'Chemistry', 77),
+    ('Michael King', 'Literature', 90),
+    ('Emily Martinez', 'History', 85),
+    ('Sophia Clark', 'Biology', 88),
+    ('Elijah Turner', 'Geography', 81),
+    ('Avery Adams', 'Art History', 93),
+	('Sophia Turner', 'Computer Science', 93),
+    ('Elijah Adams', 'Mathematics', 88),
+    ('Avery Hall', 'Physics', 82),
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+    ('Scarlett Wright', 'History', 83),
+    ('Sophia Clark', 'Biology', 88),
+    ('Elijah Turner', 'Geography', 81),
+    ('Avery Adams', 'Art History', 93),
+    ('Sophia Turner', 'Computer Science', 93),
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+	('Sophia Turner', 'Computer Science', 93),
+    ('Elijah Adams', 'Mathematics', 88),
+    ('Avery Hall', 'Physics', 82),
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+    ('Sophia Clark', 'Biology', 88),
+    ('Elijah Turner', 'Geography', 81),
+    ('Avery Adams', 'Art History', 93),
+    ('Sophia Turner', 'Computer Science', 93), 
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+    ('Sophia Adams', 'Computer Science', 88),
+    ('Elijah Turner', 'Mathematics', 88),
+    ('Avery Hall', 'Physics', 82),
+    ('Evelyn Parker', 'Chemistry', 75),
+    ('Carter Lewis', 'Literature', 90),
+    ('Scarlett Wright', 'History', 83),
+    ('Lucas Scott', 'Biology', 86),
+    ('Madison King', 'Geography', 79),
+    ('Jackson Martinez', 'Art History', 92),
+    ('Lily Clark', 'Computer Science', 87),
+    ('Aiden White', 'Mathematics', 91),
+    ('Abigail Turner', 'Physics', 84),
+    ('Ethan Harris', 'Chemistry', 77),
+    ('Olivia Green', 'Literature', 89),
+    ('Daniel Clark', 'History', 85),
+    ('Isabella Turner', 'Biology', 88),
+    ('Michael Adams', 'Geography', 81),
+    ('Emily Hall', 'Art History', 93),
+    ('Alexander Parker', 'Computer Science', 86),
+    ('Mia Lewis', 'Mathematics', 90),
+    ('James Wright', 'Physics', 83),
+    ('Charlotte Scott', 'Chemistry', 76),
+    ('Benjamin King', 'Literature', 91),
+    ('Amelia Martinez', 'History', 84),
+    ('Henry Clark', 'Biology', 87),
+    ('Grace Turner', 'Geography', 80),
+    ('Noah Harris', 'Art History', 92),
+    ('Emma Green', 'Computer Science', 85),
+    ('William Clark', 'Mathematics', 89),
+    ('Mia Turner', 'Physics', 82),
+    ('Liam Adams', 'Chemistry', 75),
+    ('Ava Hall', 'Literature', 88),
+    ('Ethan Parker', 'History', 83),
+    ('Sophie Lewis', 'Biology', 86),
+    ('Liam Wright', 'Geography', 79),
+    ('Ella Martinez', 'Art History', 94),
+    ('Henry Clark', 'Computer Science', 87),
+    ('Chloe White', 'Mathematics', 91),
+    ('Logan Turner', 'Physics', 84),
+    ('Evelyn Harris', 'Chemistry', 77),
+    ('Jackson King', 'Literature', 90),
+    ('Oliver Martinez', 'History', 85),
+    ('Emily Clark', 'Biology', 88),
+    ('Samuel Turner', 'Geography', 81),
+    ('Abigail Adams', 'Art History', 93),
+    ('Lucas Hall', 'Computer Science', 86),
+    ('Lily Lewis', 'Mathematics', 90),
+    ('Michael Wright', 'Physics', 83),
+    ('Ella Scott', 'Chemistry', 76),
+    ('Daniel King', 'Literature', 91),
+    ('Isabella Martinez', 'History', 84),
+    ('Sophia Clark', 'Biology', 87),
+    ('Ethan Turner', 'Geography', 80),
+    ('Avery Harris', 'Art History', 92),
+    ('Evelyn Adams', 'Computer Science', 85),
+    ('Carter Hall', 'Mathematics', 89),
+    ('Scarlett Parker', 'Physics', 82),
+    ('Lucas Lewis', 'Chemistry', 75),
+    ('Madison Turner', 'Literature', 88),
+    ('Jackson Martinez', 'History', 83),
+    ('Lily Green', 'Biology', 86),
+    ('Aiden Turner', 'Geography', 79),
+    ('Abigail Harris', 'Art History', 94);
+
+
+--In this query:
+--ROW_NUMBER() assigns a unique row number to each student based on their grade in descending order.
+--The result set includes columns for student name, subject, grade, and the assigned row number.
+SELECT StudentName,
+		Subject,
+		Great,
+		ROW_NUMBER() OVER (ORDER BY Great DESC) AS 'ROW NUMBERS'
+FROM Students;
+
+
+
+-- query retrieves information from the Students table and calculates a ranking (using the DENSE_RANK() function) based on the students’ grades within each subject.
+SELECT StudentName,
+		Subject,
+		Great,
+		DENSE_RANK() OVER (PARTITION BY Subject ORDER BY Great DESC) AS 'RATE'
+FROM Students
+
+
+--The query retrieves distinct subjects from the Students table.
+--It calculates the average grade (AVG(Great)) and the sum of grades (SUM(Great)) for each subject.
+--The OVER (PARTITION BY Subject) clause ensures that the calculations are performed separately for each subject.
+SELECT DISTINCT
+	Subject,
+	AVG(Great) OVER (PARTITION BY Subject) AS 'Average',
+	SUM(Great) OVER (PARTITION BY Subject) AS 'Sum'
+FROM Students
+
+--The goal of this query is to update the Great column in the Students table with random integer values between the specified @MinValue and @MaxValue.
+DECLARE @MinValue INT = 1;
+DECLARE @MaxValue INT = 100;
+DECLARE @RandomNumber INT;
+DECLARE @RECORDS INT;
+DECLARE @TOTALRECORD INT;
+
+
+--SET @RandomNumber = CAST((RAND() * (@MaxValue - @MinValue + 1)) + @MinValue AS INT);
+SELECT @TOTALRECORD = COUNT(*) FROM Students;
+SET @RECORDS = 0;
+
+WHILE @RECORDS <= @TOTALRECORD
+	
+BEGIN
+
+		SET @RECORDS = @RECORDS + 1;
+			UPDATE Students
+			SET Great = CAST((RAND() * (@MaxValue - @MinValue + 1)) + @MinValue AS INT)
+			WHERE Students.STUDENTID = @RECORDS
+END
+
+
+--The query aims to retrieve records from the Students table along with additional calculated columns.
+SELECT *FROM (
+SELECT *,
+	DENSE_RANK()OVER(PARTITION BY Students.Subject ORDER BY GREAT DESC) AS Rate,
+	ROW_NUMBER() OVER (ORDER BY GREAT DESC) AS COUNTER
+FROM Students)R1
+WHERE R1.Rate IN (1,2)
+
+
+
+--query will return a result set with the specified columns, along with the previous and next values of the GREAT column for each row.
+SELECT StudentID,StudentName,Subject,
+	LAG(GREAT , 1) OVER (ORDER BY GREAT DESC) AS 'Previous Great',
+	Great,
+	LEAD(GREAT,1)OVER (ORDER BY GREAT DESC) AS 'Next Great'
+FROM STUDENTS
+
+
+--				Student passed
+--Percentage = ________________  X 100
+--				Total Student
