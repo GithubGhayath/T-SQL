@@ -243,3 +243,46 @@ ELSE
 	BEGIN
 		PRINT 'EMPLOYEE NOT HERE'
 	END
+
+
+--The stored procedure SP_GetStudentByPage retrieves student data based on the specified page number.
+--It calculates the offset using the @PageNumber and @NumberOfRowsPerPage variables.
+--The FETCH NEXT clause limits the result set to the desired number of rows per page.
+-- Create a stored procedure named SP_GetStudentByPage
+CREATE PROCEDURE SP_GetStudentByPage 
+    @PageNumber INT
+AS
+BEGIN 
+    -- Declare variables for page number and rows per page
+    DECLARE @NumberOfRowsPerPage INT;
+
+    -- Set initial values for the variables
+    SET @NumberOfRowsPerPage = 10; -- Set the desired number of rows per page
+
+    -- Retrieve data from the Students table
+    SELECT *
+    FROM Students
+    ORDER BY StudentID
+    OFFSET (@PageNumber - 1) * @NumberOfRowsPerPage ROWS
+    FETCH NEXT @NumberOfRowsPerPage ROWS ONLY;
+END;
+
+-- Declare and set values for page numbers
+DECLARE @Page1 INT;
+DECLARE @Page2 INT;
+DECLARE @Page3 INT;
+DECLARE @Page4 INT;
+DECLARE @Page5 INT;
+
+SET @Page1 = 1;
+SET @Page2 = 2;
+SET @Page3 = 3;
+SET @Page4 = 4;
+SET @Page5 = 5;
+
+-- Execute the stored procedure for different page numbers
+EXEC SP_GetStudentByPage @PageNumber = @Page1;
+EXEC SP_GetStudentByPage @PageNumber = @Page2;
+EXEC SP_GetStudentByPage @PageNumber = @Page3;
+EXEC SP_GetStudentByPage @PageNumber = @Page4;
+EXEC SP_GetStudentByPage @PageNumber = @Page5;
