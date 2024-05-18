@@ -1,0 +1,121 @@
+-- Create the "Teacher" table with the specified columns
+CREATE TABLE Teacher (
+    TeacherID INT PRIMARY KEY, -- Unique identifier for each teacher
+    TeacherName VARCHAR(255), -- Name of the teacher
+    Performance DECIMAL(10, 2), -- Performance metrics (e.g., grades)
+    Subject VARCHAR(255) -- Subject taught by the teacher
+);
+
+-- Insert records into the "Teacher" table
+INSERT INTO Teacher (TeacherID, TeacherName, Performance, Subject)
+VALUES
+    (1, 'John Doe', 95.5, 'Math'), -- John Doe teaches Math
+    (2, 'Jane Smith', 88.2, 'Science'), -- Jane Smith teaches Science
+    (3, 'Robert Johnson', 75.0, 'History'), -- Robert Johnson teaches History
+    (4, 'Emily Brown', 91.8, 'English'), -- Emily Brown teaches English
+    (5, 'Michael Lee', 82.5, 'Physics'), -- Michael Lee teaches Physics
+    (6, 'Sophia Rodriguez', 78.3, 'Chemistry'), -- Sophia Rodriguez teaches Chemistry
+    (7, 'David Clark', 87.6, 'Computer Science'), -- David Clark teaches Computer Science
+    (8, 'Olivia White', 79.4, 'Art'), -- Olivia White teaches Art
+    (9, 'William Turner', 92.1, 'Music'); -- William Turner teaches Music
+
+
+
+CREATE FUNCTION dbo.CountPassedTest(@LocalID INT)
+RETURNS INT
+AS 
+BEGIN
+             DECLARE @PassedTest INT;
+
+SELECT       @PassedTest = COUNT(*)
+FROM            LocalDrivingLicenseApplications INNER JOIN
+                         TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID INNER JOIN
+                         Tests ON TestAppointments.TestAppointmentID = Tests.TestAppointmentID
+                  WHERE (LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID=@LocalID AND Tests.TestResult=1)
+
+                      RETURN @PassedTest;
+ END					 
+
+
+
+-- This function calculates the sum of marks for a given subject.
+-- It takes a subject name as input and returns the total marks for that subject.
+-- The function queries the "Students" table to find the sum of the "Great" column
+-- for rows where the subject matches the input parameter.
+-- The result is returned as an integer value.
+
+CREATE FUNCTION SumOfMarks(@Sjt NVARCHAR(50))
+RETURNS INT
+AS
+BEGIN
+    DECLARE @SUMATION INT;
+    
+    SELECT @SUMATION = SUM(Students.Great) FROM Students WHERE @Sjt = Students.Subject;
+    
+    RETURN @SUMATION;
+END
+
+
+
+
+-- This function calculates the number of students enrolled in a given subject.
+-- It takes a subject name as input and returns the count of students who are
+-- studying that subject. The function queries the "Students" table to find the
+-- total number of rows where the subject matches the input parameter.
+-- The result is returned as an integer value representing the student count.
+
+CREATE FUNCTION GetNumberOfStudentBySubject(@SUBJECT NVARCHAR(50))
+RETURNS INT
+AS
+BEGIN
+    DECLARE @NumberOfStudents INT;
+    
+    SELECT @NumberOfStudents = COUNT(*) FROM Students WHERE Subject = @SUBJECT;
+    
+    RETURN @NumberOfStudents;
+END
+
+
+
+
+-- This function calculates the sum of marks for a given subject.
+-- It takes a subject name as input and returns the total marks for that subject.
+-- The function queries the "Students" table to find the sum of the "Great" column
+-- for rows where the subject matches the input parameter.
+-- The result is returned as an integer value.
+
+CREATE FUNCTION SumOfMarks(@Sjt NVARCHAR(50))
+RETURNS INT
+AS
+BEGIN
+    DECLARE @SUMATION INT;
+    
+    SELECT @SUMATION = SUM(Students.Great) FROM Students WHERE @Sjt = Students.Subject;
+    
+    RETURN @SUMATION;
+END
+
+
+
+-- This function calculates the percentage of students who passed a test in a given subject.
+-- It takes a subject name as input and returns the percentage of students who scored
+-- equal to or greater than 60 (considered as passing).
+-- The function queries the "Students" table to find the count of students who passed
+-- and the total count of students in that subject.
+-- The result is returned as an integer representing the percentage.
+
+CREATE FUNCTION PercentageOfStudentsPassedTheTest(@Subject NVARCHAR(50))
+RETURNS INT
+AS 
+BEGIN
+    DECLARE @NUMBEROFSTUDENTPASSED INT;
+    DECLARE @TOTALSTUDENTS INT;
+    DECLARE @PERCE INT;
+
+    SELECT @NUMBEROFSTUDENTPASSED = COUNT(*) FROM Students WHERE (Subject = @Subject AND Great >= 60);
+    SELECT @TOTALSTUDENTS = COUNT(*) FROM Students WHERE Subject = @Subject;
+
+    SET @PERCE = (CAST(@NUMBEROFSTUDENTPASSED AS numeric) / CAST(@TOTALSTUDENTS AS numeric)) * 100;
+
+    RETURN @PERCE;
+END
