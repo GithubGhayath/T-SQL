@@ -1,0 +1,189 @@
+--Table-Valued Functions (TVFs) are user-defined functions in T-SQL that return tabular data as a result.
+--They are a powerful feature in SQL Server that can be used to encapsulate complex queries and logic into reusable components.
+
+--Types of Table-Valued Functions:
+		--There are two types of TVFs in T-SQL:
+			--*Inline Table-Valued Functions (ITVFs): These functions return a table variable inline and can be used in the FROM clause of a SELECT statement.
+			--*Multi-Statement Table-Valued Functions (MTVFs): These functions return a table variable using a series of SQL statements and can have multiple SELECT statements within them.
+			--*These functions can also accept parameters and return a table variable based on the input.
+
+
+-- 1- Inline Table-Valued Functions (ITVFs) in T-SQL
+
+--Introduction:
+--In T-SQL, Inline Table-Valued Functions (ITVFs) are user-defined functions that return a table expression.
+--They are defined using the RETURNS TABLE clause and a single SELECT statement.
+--ITVFs provide a flexible way to encapsulate complex logic and reuse it in queries.
+
+--You cannot use UPDATE or INSERT statements in Inline Table-Valued Functions (ITVFs) in T-SQL.
+--Inline Table-Valued Functions are designed to be read-only, and they return a table variable that is essentially a result of a single SELECT statement.
+--Since these functions are read-only, they cannot modify the data in the database, which means you cannot perform data manipulation operations like INSERT, UPDATE, DELETE, or MERGE within them.
+
+--The primary purpose of an ITVF is to encapsulate a SELECT query.
+--This limitation ensures that the function remains deterministic and does not change the state of the database, which is a critical aspect for functions in SQL Server.
+--If you need to perform insert or update operations, you would typically use Stored Procedures or other types of T-SQL routines that are designed for such purposes.
+
+
+
+-- This function returns all students who are enrolled in a given subject.
+-- It takes a subject name as input and retrieves all rows from the "Students" table
+-- where the subject matches the input parameter.
+-- The result is returned as a table containing student records.
+
+CREATE FUNCTION dbo.GetAllStudentBySubject
+(
+    @Subject NVARCHAR(50)
+)
+RETURNS TABLE
+AS RETURN
+(
+    SELECT * FROM Students WHERE Subject = @Subject
+)
+
+--Using Inline table valued function 
+SELECT * FROM dbo.GetAllStudentBySubject('Biology')
+SELECT * FROM dbo.GetAllStudentBySubject('Geography')
+SELECT * FROM dbo.GetAllStudentBySubject('Art History')
+SELECT * FROM dbo.GetAllStudentBySubject('Computer Science')
+
+
+select *from Students
+
+select *from Teacher
+
+
+
+-- This function returns a table containing student records along with their respective teacher names.
+-- It takes a subject name as input and retrieves all rows from the "Students" table where the subject
+-- matches the input parameter. Additionally, it performs a cross join with the "Teacher" table to
+-- associate each student with their corresponding teacher based on the subject.
+-- The result includes columns from both the "Students" and "Teacher" tables.
+
+CREATE FUNCTION dbo.GetAllStudentBySubjectWithTeacherName
+(
+    @Subject NVARCHAR(50)
+)
+RETURNS TABLE
+AS RETURN
+(
+    SELECT Students.*, Teacher.TeacherName
+    FROM Teacher
+    CROSS JOIN Students
+    WHERE Students.Subject = Teacher.Subject
+          AND Students.Subject = @Subject
+)
+
+
+--Using Inline table valued function
+SELECT * FROM dbo.GetAllStudentBySubjectWithTeacherName('Computer Science')
+
+
+--Fired: A boolean column (BIT) to indicate whether the employee has been fired (default value is 0, meaning not fired).
+CREATE TABLE Employees
+(
+    EmployeeID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    BirthDate DATE,
+    HireDate DATE,
+    Fired BIT DEFAULT 0
+);
+
+-- Inserting sample records (you can adjust the data as needed)
+INSERT INTO Employees (EmployeeID, FirstName, LastName, BirthDate, HireDate, Fired)
+VALUES
+	 (1, 'David', 'Miller', '1986-04-18', '2011-08-05', 0),   -- Not fired
+    (2, 'Sarah', 'Wilson', '1992-01-25', '2013-03-12', 1),   -- Fired
+    (3, 'Robert', 'Brown', '1988-09-08', '2012-06-20', 0),
+	(4, 'Emily', 'Johnson', '1995-07-10', '2014-11-30', 1),  -- Fired
+    (5, 'Michael', 'Hall', '1990-11-30', '2017-02-15', 0),  -- Not fired
+	 (6, 'Jennifer', 'Adams', '1994-03-20', '2015-09-10', 0),   -- Not fired
+    (7, 'Kevin', 'Smith', '1987-08-12', '2016-02-25', 1),      -- Fired
+    (8, 'Laura', 'Williams', '1991-05-18', '2017-11-08', 0),   -- Not fired
+    (9, 'Brian', 'Martin', '1989-12-05', '2018-07-15', 1),     -- Fired
+    (10, 'Sophie', 'Lee', '1993-10-30', '2019-04-20', 0),      -- Not fired
+	(11, 'Matthew', 'Turner', '1994-03-20', '2015-09-10', 0),   -- Not fired
+    (12, 'Emma', 'Harris', '1987-08-12', '2016-02-25', 1),      -- Fired
+    (13, 'William', 'Walker', '1991-05-18', '2017-11-08', 0),   -- Not fired
+    (14, 'Oliver', 'Parker', '1989-12-05', '2018-07-15', 1),    -- Fired
+    (15, 'Ava', 'Bennett', '1993-10-30', '2019-04-20', 0),     -- Not fired
+	(16, 'Ella', 'Turner', '1994-03-20', '2015-09-10', 0),   -- Not fired
+    (17, 'James', 'Harris', '1987-08-12', '2016-02-25', 1),   -- Fired
+    (18, 'Grace', 'Walker', '1991-05-18', '2017-11-08', 0),  -- Not fired
+    (19, 'Alexander', 'Parker', '1989-12-05', '2018-07-15', 1),  -- Fired
+    (20, 'Lily', 'Bennett', '1993-10-30', '2019-04-20', 0),  -- Not fired
+    (21, 'Benjamin', 'Smith', '1990-06-22', '2020-01-05', 1),  -- Fired
+    (22, 'Chloe', 'Rodriguez', '1988-03-15', '2021-08-20', 0),  -- Not fired
+    (23, 'Henry', 'Gonzalez', '1995-01-25', '2022-03-12', 1),  -- Fired
+    (24, 'Zoe', 'Adams', '1992-09-08', '2023-06-10', 0),  -- Not fired
+    (25, 'Ethan', 'Wilson', '1994-07-10', '2024-11-30', 1);  -- Fired
+
+
+
+
+
+-- This function returns a table containing employee records based on their employment status.
+-- It takes a boolean input parameter (@Fired) to filter employees by their fired status.
+-- If @Fired is 1, it retrieves records of fired employees; if 0, it retrieves records of active employees.
+-- The result includes all columns from the "Employees" table.
+
+CREATE FUNCTION dbo.GetEmployeesByStatusWord
+(
+    @Fired BIT
+)
+RETURNS TABLE
+AS RETURN
+(
+    SELECT * FROM Employees WHERE Employees.Fired = @Fired
+)
+
+
+SELECT * FROM dbo.GetEmployeesByStatusWord(1)-- All employees Fired
+
+SELECT * FROM dbo.GetEmployeesByStatusWord(0) -- All Employees not fired
+
+
+ALTER TABLE Employees 
+ADD Performance DECIMAL(5, 2);
+
+
+-- This script updates the "Performance" column for employees with random values.
+-- It iterates through the records in the "Employees" table, setting each employee's
+-- performance to a random decimal value between 0 and 100.
+-- The loop runs from EmployeeID 1 to EmployeeID 25.
+DECLARE @COUN INT;
+DECLARE @EMID INT;
+
+SET @COUN = 1;
+SET @EMID = 25;
+
+WHILE @COUN <= @EMID
+BEGIN
+    -- Update Performance column with random values
+    UPDATE Employees
+    SET Performance = ROUND(RAND() * 100, 2) -- Generates random performance values between 0 and 100
+    WHERE EmployeeID = @COUN;
+
+    SET @COUN = @COUN + 1;
+END
+
+
+CREATE FUNCTION dbo.GetEmployeesByPerformance
+(
+	@PerformanceGiven DECIMAL
+)
+RETURNS TABLE
+AS RETURN
+(
+	SELECT * FROM Employees WHERE Performance = @PerformanceGiven
+)
+
+
+SELECT * FROM dbo.GetEmployeesByPerformance(30.26)
+
+
+
+
+
+
+
