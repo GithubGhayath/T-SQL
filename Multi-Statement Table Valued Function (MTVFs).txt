@@ -1,0 +1,42 @@
+-- This function retrieves a list of students based on the specified subject.
+-- The function takes a single parameter, @Subject, which represents the subject name.
+-- It returns a table variable @StudentList containing student information.
+
+CREATE FUNCTION dbo.GetStudentBySubject(@Subject NVARCHAR(50))
+RETURNS @StudentList TABLE (
+    StudentID INT PRIMARY KEY,
+    StudentName NVARCHAR(100),
+    StudentAge INT
+)
+AS
+BEGIN
+    -- Insert students into the @StudentList table based on the specified subject.
+    INSERT INTO @StudentList (StudentID, StudentName, StudentAge)
+    SELECT Students.StudentID, Students.StudentName, Students.AGE
+    FROM Students
+    WHERE Subject = @Subject;
+
+    -- Return the populated @StudentList table.
+    RETURN;
+END
+
+-- Example usage: Retrieve students for the subject 'Geography'
+SELECT * FROM dbo.GetStudentBySubject('Geography');
+
+
+
+-- This query retrieves student information for the subject 'Geography'.
+-- It joins the result of the function dbo.GetStudentBySubject('Geography') with the Students table.
+-- The join is based on the StudentName column.
+-- The result includes StudentID, StudentName, and Subject.
+-- The final result is ordered by StudentID in descending order.
+
+SELECT G.StudentID, G.StudentName, S.Subject
+FROM dbo.GetStudentBySubject('Geography') G
+INNER JOIN Students S ON S.StudentName = G.StudentName
+ORDER BY StudentID DESC;
+
+
+
+
+
